@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="description" content="DragonCraft (DC) - سرور ماینکرفت حرفه‌ای با تم گیمینگ، اقتصاد، رنک، ایونت و تجربه‌ای سینمایی. IP: DragonCraftDC.aternos.me:14638" />
+  <meta name="keywords" content="DragonCraft, DC, Minecraft Server, ماینکرفت, سرور ماینکرفت, اقتصاد, رنک, ایونت, AntiCheat" />
+  <meta name="author" content="DragonCraft" />
+
+  <meta property="og:title" content="DragonCraft (DC) | سرور ماینکرفت حرفه‌ای" />
+  <meta property="og:description" content="به DragonCraft بپیوند؛ تم گیمینگ، اقتصاد، رنک، ایونت و تجربه‌ای سینمایی با اژدهای سه‌بعدی." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fa_IR" />
+
+  <title>DragonCraft (DC) | سرور ماینکرفت حرفه‌ای</title>
+
+  <style>
+    :root{
+      --bg:#06060a;
+      --bg2:#0b0b12;
+      --card: rgba(18, 18, 28, .58);
+      --card2: rgba(255,255,255,.05);
+      --line: rgba(255,255,255,.09);
+      --text:#f4f6ff;
+      --muted:#a8adbd;
+      --red:#ff2d2d;
+      --red2:#ff4d6d;
+      --gold:#ffb347;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 22px;
+      --radius2: 16px;
+      --max: 1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255,45,45,.10), transparent 30%),
+        radial-gradient(circle at 20% 20%, rgba(255,77,109,.10), transparent 25%),
+        radial-gradient(circle at 80% 0%, rgba(255,45,45,.08), transparent 25%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .container{width:min(var(--max), calc(100% - 32px)); margin-inline:auto}
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border:1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .grid-bg{
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at center, black 25%, transparent 85%);
+      z-index:0;
+    }
+
+    /* Background canvas */
+    #bgCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      display:block;
+    }
+    .noise{
+      position:fixed; inset:0; pointer-events:none; z-index:1;
+      opacity:.05;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+    }
+
+    header{
+      position:sticky; top:0; z-index:20;
+      padding:14px 0;
+      background: linear-gradient(180deg, rgba(6,6,10,.86), rgba(6,6,10,.50));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width:0;
+    }
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      display:grid; place-items:center;
+      background: radial-gradient(circle at 30% 30%, rgba(255,77,109,.40), rgba(255,45,45,.12) 40%, rgba(255,255,255,.06) 100%);
+      border:1px solid rgba(255,77,109,.35);
+      box-shadow: 0 0 26px rgba(255,45,45,.25), inset 0 0 20px rgba(255,255,255,.08);
+      flex:0 0 auto;
+    }
+    .logo svg{width:26px;height:26px;fill:#fff; filter: drop-shadow(0 0 8px rgba(255,45,45,.6));}
+    .brand h1{
+      margin:0; font-size:1rem; line-height:1.2;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .brand small{display:block; color:var(--muted); margin-top:3px; font-size:.8rem}
+    .nav-actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:none; cursor:pointer;
+      border-radius:999px;
+      padding:12px 18px;
+      color:var(--text);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      transition:.25s ease;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn:hover{transform:translateY(-2px); border-color:rgba(255,77,109,.35); box-shadow:0 0 0 4px rgba(255,45,45,.10)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(255,45,45,.95), rgba(255,77,109,.88));
+      border-color: rgba(255,255,255,.16);
+      box-shadow: 0 12px 30px rgba(255,45,45,.22), 0 0 24px rgba(255,45,45,.18);
+    }
+    .btn.primary:hover{box-shadow:0 16px 40px rgba(255,45,45,.28), 0 0 32px rgba(255,45,45,.22)}
+
+    main{position:relative; z-index:2}
+    .hero{
+      min-height: calc(100svh - 82px);
+      display:grid; align-items:center;
+      padding: 34px 0 42px;
+    }
+    .hero-wrap{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:24px;
+      align-items:center;
+    }
+    .hero-card{
+      border-radius: clamp(22px, 3vw, 34px);
+      padding: 28px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(circle at 20% 20%, rgba(255,45,45,.16), transparent 32%),
+                  radial-gradient(circle at 80% 10%, rgba(255,255,255,.06), transparent 24%),
+                  linear-gradient(135deg, rgba(255,45,45,.10), transparent 55%);
+      pointer-events:none;
+    }
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,45,45,.10);
+      border:1px solid rgba(255,45,45,.18);
+      color:#ffd7d7;
+      font-size:.88rem;
+      margin-bottom:16px;
+    }
+    .eyebrow .dot{
+      width:9px; height:9px; border-radius:50%;
+      background: var(--red);
+      box-shadow:0 0 14px rgba(255,45,45,.95);
+    }
+    .hero h2{
+      margin:0 0 14px;
+      font-size: clamp(2rem, 6vw, 4.8rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+    .hero h2 .glow{
+      color:#fff;
+      text-shadow: 0 0 18px rgba(255,45,45,.30), 0 0 34px rgba(255,45,45,.18);
+    }
+    .hero p{
+      margin:0 0 22px;
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.9;
+      max-width: 58ch;
+    }
+    .ip-box{
+      display:flex; flex-wrap:wrap; gap:12px;
+      margin-bottom:20px;
+      align-items:center;
+    }
+    .ip-pill{
+      flex:1 1 320px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .ip-pill code{
+      font-size:1.05rem;
+      color:#fff;
+      word-break:break-all;
+    }
+    .hint{color:var(--muted); font-size:.92rem}
+    .hero-actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:16px}
+    .meta-row{
+      display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
+      margin-top:22px;
+    }
+    .meta{
+      padding:16px;
+      border-radius:18px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .meta strong{display:block; font-size:1.15rem; margin-bottom:4px}
+    .meta span{color:var(--muted); font-size:.9rem}
+    .visual{
+      min-height: 560px;
+      border-radius: 28px;
+      position:relative;
+      overflow:hidden;
+      padding:0;
+    }
+    .visual .overlay{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,45,45,.10), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.03), transparent 25%, rgba(0,0,0,.25));
+      pointer-events:none;
+      z-index:2;
+    }
+    .visual-badge{
+      position:absolute; top:16px; right:16px; z-index:3;
+      padding:10px 14px; border-radius:999px;
+      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.09);
+      color:#fff;
+      font-size:.88rem;
+      backdrop-filter: blur(12px);
+    }
+    .section{
+      padding: 24px 0;
+    }
+    .section h3{
+      margin:0 0 14px;
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+    }
+    .section p.lead{
+      color:var(--muted);
+      margin:0 0 18px;
+      line-height:1.9;
+    }
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:16px;
+    }
+    .card{
+      padding:20px;
+      border-radius:24px;
+      background: var(--card);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .card h4{margin:0 0 8px; font-size:1.05rem}
+    .card p{margin:0; color:var(--muted); line-height:1.85}
+    .warn{
+      border-radius: 24px;
+      padding:18px 20px;
+      background: linear-gradient(135deg, rgba(255,45,45,.16), rgba(255,255,255,.06));
+      border:1px solid rgba(255,45,45,.24);
+      box-shadow: 0 0 36px rgba(255,45,45,.10);
+    }
+    .warn strong{color:#ffdede}
+    .steps{
+      display:grid;
+      gap:14px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .step{
+      padding:18px;
+      border-radius:20px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .step .num{
+      width:34px;height:34px;border-radius:12px;
+      display:grid;place-items:center;
+      background: rgba(255,45,45,.16);
+      color:#fff; margin-bottom:10px;
+      border:1px solid rgba(255,45,45,.24);
+      box-shadow: 0 0 18px rgba(255,45,45,.12);
+      font-weight:700;
+    }
+    .faq{display:grid; gap:12px}
+    details{
+      border-radius:20px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      padding:16px 18px;
+    }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      font-weight:700;
+    }
+    summary::-webkit-details-marker{display:none}
+    details p{color:var(--muted); line-height:1.85; margin:10px 0 0}
+    .footer-cta{
+      margin: 8px 0 24px;
+      padding: 26px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,45,45,.14), transparent 30%),
+        radial-gradient(circle at 90% 0%, rgba(255,77,109,.12), transparent 22%),
+        rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      text-align:center;
+    }
+    footer{
+      padding: 24px 0 40px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .float-glow{
+      position:absolute; border-radius:50%;
+      filter: blur(30px);
+      opacity:.28;
+      pointer-events:none;
+      animation: floaty 8s ease-in-out infinite;
+      z-index:1;
+    }
+    .g1{width:220px;height:220px;background:rgba(255,45,45,.22); top:-50px; left:-40px}
+    .g2{width:180px;height:180px;background:rgba(255,77,109,.18); bottom:10%; right:-30px; animation-duration:10s}
+    @keyframes floaty{
+      0%,100%{transform:translateY(0) translateX(0) scale(1)}
+      50%{transform:translateY(-18px) translateX(10px) scale(1.06)}
+    }
+
+    .toast{
+      position:fixed; left:16px; bottom:16px; z-index:50;
+      padding:12px 14px; border-radius:14px;
+      background: rgba(10,10,16,.88);
+      border:1px solid rgba(255,255,255,.10);
+      color:#fff; box-shadow:var(--shadow);
+      transform: translateY(120%);
+      opacity:0;
+      transition:.28s ease;
+      max-width:min(360px, calc(100vw - 32px));
+    }
+    .toast.show{transform:translateY(0); opacity:1}
+
+    @media (max-width: 980px){
+      .hero-wrap{grid-template-columns:1fr; }
+      .visual{min-height:420px}
+      .cards{grid-template-columns:1fr 1fr}
+      .steps{grid-template-columns:1fr}
+      .meta-row{grid-template-columns:1fr}
+    }
+    @media (max-width: 640px){
+      .container{width:min(var(--max), calc(100% - 24px))}
+      .hero{padding-top:22px}
+      .hero-card, .card, .footer-cta, details, .warn{border-radius:20px}
+      .cards{grid-template-columns:1fr}
+      .nav{gap:12px}
+      .brand small{display:none}
+      .nav-actions .btn{padding:10px 14px}
+      .hero p{font-size:1rem}
+      .hero-card{padding:20px}
+      .ip-pill{flex-direction:column; align-items:flex-start}
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      *, *::before, *::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+        scroll-behavior:auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2c2.2 3.2 4.9 4.2 7.5 4.6-.4 2.8-1.6 5.3-3.7 7.1-1.4 1.2-2.5 1.8-3.8 2.9-1.3-1.1-2.4-1.7-3.8-2.9-2.1-1.8-3.3-4.3-3.7-7.1C7.1 6.2 9.8 5.2 12 2Zm0 18c-2.4 0-4.3-.5-6.2-1.6 1.3-1.6 3.2-2.6 6.2-2.6s4.9 1 6.2 2.6C16.3 19.5 14.4 20 12 20Z"/>
+          </svg>
+        </div>
+        <div>
+          <h1>DragonCraft <span style="color:var(--red2)">(DC)</span></h1>
+          <small>سرور ماینکرفت حرفه‌ای با حال‌وهوای AAA Gaming</small>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a class="btn" href="#join">راهنمای ورود</a>
+        <button class="btn primary" id="copyIpTop">Copy IP</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-wrap">
+        <div class="hero-card glass">
+          <span class="eyebrow"><span class="dot"></span> سرور رسمی DragonCraft فعال است</span>
+          <h2>به <span class="glow">DragonCraft</span> بپیوند و وارد دنیای نبرد، اقتصاد و ایونت شو</h2>
+          <p>
+            DragonCraft (DC) یک تجربه‌ی ماینکرفت فارسی، پرانرژی و حرفه‌ای است؛
+            با تم گیمینگ مشکی/قرمز، اقتصاد پویا، رنک‌های جذاب، شاپ، ایونت‌های هیجان‌انگیز و سیستم ضدتقلب.
+          </p>
+
+          <div class="ip-box">
+            <div class="ip-pill">
+              <div>
+                <div class="hint">IP سرور</div>
+                <code id="serverIp">DragonCraftDC.aternos.me:14638</code>
+              </div>
+              <button class="btn" id="copyIp">کپی IP</button>
+            </div>
+          </div>
+
+          <div class="hero-actions" id="join">
+            <a class="btn primary" href="minecraft://DragonCraftDC.aternos.me:14638">Join Now</a>
+            <button class="btn" id="scrollGuide">راهنمای اتصال</button>
+          </div>
+
+          <div class="meta-row" aria-label="اطلاعات سریع سرور">
+            <div class="meta">
+              <strong>Economy</strong>
+              <span>سیستم پول داخل بازی با دلار ($)</span>
+            </div>
+            <div class="meta">
+              <strong>Events</strong>
+              <span>ایونت‌های منظم و رقابتی</span>
+            </div>
+            <div class="meta">
+              <strong>AntiCheat</strong>
+              <span>تجربه منصفانه و امن</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="visual glass">
+          <div class="overlay"></div>
+          <div class="visual-badge">3D Dragon / WebGL Background</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container warn">
+        <strong>هشدار مهم:</strong>
+        برای ورود به سرور، <strong>فعال‌سازی DNS یا Radar Gaming</strong> لازم است.
+        اگر اتصال برقرار نشد، مراحل راهنما را در بخش پایین دقیق انجام بده.
+      </div>
+    </section>
+
+    <section class="section" id="guide">
+      <div class="container">
+        <h3>راهنمای اتصال</h3>
+        <p class="lead">برای ورود بدون مشکل، این مراحل را به‌ترتیب انجام بده:</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="num">1</div>
+            <h4>فعال‌سازی DNS</h4>
+            <p class="lead">DNSهای زیر را در دستگاه یا اپلیکیشن خود وارد کن:</p>
+            <p><strong>10.202.10.10</strong><br><strong>10.202.10.11</strong></p>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <h4>ورود به ماینکرفت</h4>
+            <p class="lead">بازی را باز کن و از بخش Servers یک سرور جدید اضافه کن.</p>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <h4>وارد کردن IP</h4>
+            <p class="lead">آدرس زیر را دقیق وارد کن:</p>
+            <p><strong>DragonCraftDC.aternos.me:14638</strong></p>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <h4>اتصال و بازی</h4>
+            <p class="lead">بعد از اتصال، از لابی وارد دنیای DragonCraft شو و لذت ببر.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h3>ویژگی‌های سرور</h3>
+        <p class="lead">هر چیزی که یک پلیر برای ماندن و برگشتن دوباره لازم دارد.</p>
+
+        <div class="cards">
+          <div class="card">
+            <h4>Economy</h4>
+            <p>اقتصاد فعال با پول داخل بازی ($)، خرید و فروش، و مسیر پیشرفت واقعی.</p>
+          </div>
+          <div class="card">
+            <h4>Rank System</h4>
+            <p>رنک‌های قابل ارتقا برای پلیرهایی که می‌خواهند سریع‌تر رشد کنند و آیتم‌های ویژه بگیرند.</p>
+          </div>
+          <div class="card">
+            <h4>Shop</h4>
+            <p>شاپ کاربردی برای آیتم‌ها، ابزارها و امکانات جذاب داخل سرور.</p>
+          </div>
+          <div class="card">
+            <h4>Events</h4>
+            <p>ایونت‌های هیجان‌انگیز با جوایز ارزشمند برای رقابت سالم و سرگرمی بیشتر.</p>
+          </div>
+          <div class="card">
+            <h4>AntiCheat</h4>
+            <p>سیستم ضدتقلب برای تجربه‌ای منصفانه، پایدار و حرفه‌ای.</p>
+          </div>
+          <div class="card">
+            <h4>AAA Gaming Feel</h4>
+            <p>طراحی سینمایی، افکت‌های نورانی و حس یک لانچر/لندینگ حرفه‌ای.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h3>درباره ما</h3>
+        <p class="lead">
+          DragonCraft با هدف ساخت یک جامعه‌ی فعال، رقابتی و لذت‌بخش برای پلیرهای فارسی‌زبان ساخته شده.
+          ما روی کیفیت تجربه، تعادل اقتصاد، امنیت و هیجان ایونت‌ها تمرکز داریم تا هر ورود به سرور ارزشمند باشد.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h3>سیستم اقتصاد و رنک‌ها</h3>
+        <div class="cards">
+          <div class="card">
+            <h4>پول داخل بازی</h4>
+            <p>واحد اقتصادی سرور با نماد <strong>$</strong> کار می‌کند و در تمام بخش‌های خرید و ارتقا استفاده می‌شود.</p>
+          </div>
+          <div class="card">
+            <h4>Member</h4>
+            <p>قیمت رنک Member: <strong>$10,000</strong></p>
+          </div>
+          <div class="card">
+            <h4>VIP</h4>
+            <p>قیمت رنک VIP: <strong>$100,000</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h3>FAQ</h3>
+        <div class="faq">
+          <details>
+            <summary>چطور وارد سرور شوم؟</summary>
+            <p>DNS را فعال کن، سپس IP سرور را وارد کن: <strong>DragonCraftDC.aternos.me:14638</strong></p>
+          </details>
+          <details>
+            <summary>اگر وصل نشد چه کنم؟</summary>
+            <p>مطمئن شو DNSهای <strong>10.202.10.10</strong> و <strong>10.202.10.11</strong> فعال هستند و سپس دوباره تلاش کن.</p>
+          </details>
+          <details>
+            <summary>رنک‌ها چه مزیتی دارند؟</summary>
+            <p>رنک‌ها برای پیشرفت سریع‌تر، امکانات ویژه و تجربه‌ی بهتر طراحی شده‌اند.</p>
+          </details>
+          <details>
+            <summary>آیا سرور ضدتقلب دارد؟</summary>
+            <p>بله، سیستم AntiCheat فعال است تا همه‌ی پلیرها تجربه‌ای منصفانه و پایدار داشته باشند.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container footer-cta">
+        <h3>آماده‌ای وارد DragonCraft شوی؟</h3>
+        <p class="lead">الان وارد شو، رنک بگیر، در ایونت‌ها شرکت کن و در اقتصاد سرور رشد کن.</p>
+        <div class="hero-actions" style="justify-content:center">
+          <a class="btn primary" href="minecraft://DragonCraftDC.aternos.me:14638">Join DragonCraft</a>
+          <button class="btn" id="copyIpBottom">Copy IP</button>
+          <a class="btn" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">بازگشت به بالا</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div style="display:flex; gap:12px; justify-content:space-between; flex-wrap:wrap; align-items:center; border-top:1px solid rgba(255,255,255,.08); padding-top:18px;">
+          <div>© 2026 DragonCraft (DC) — همه حقوق محفوظ است.</div>
+          <div>IP: <strong>DragonCraftDC.aternos.me:14638</strong></div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast">کپی شد! IP سرور در کلیپ‌بورد ذخیره شد.</div>
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    const IP = 'DragonCraftDC.aternos.me:14638';
+    const toast = document.getElementById('toast');
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(()=>toast.classList.remove('show'), 2200);
+    }
+
+    async function copyIP(){
+      try{
+        await navigator.clipboard.writeText(IP);
+        showToast('کپی شد! IP سرور در کلیپ‌بورد ذخیره شد.');
+      }catch(e){
+        const ta = document.createElement('textarea');
+        ta.value = IP;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast('کپی شد!');
+      }
+    }
+
+    document.getElementById('copyIp').addEventListener('click', copyIP);
+    document.getElementById('copyIpTop').addEventListener('click', copyIP);
+    document.getElementById('copyIpBottom').addEventListener('click', copyIP);
+    document.getElementById('scrollGuide').addEventListener('click', ()=>document.getElementById('guide').scrollIntoView({behavior:'smooth'}));
+
+    // Three.js cinematic dragon background
+    (function(){
+      const canvas = document.getElementById('bgCanvas');
+      const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, powerPreference:'high-performance'});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
+      camera.position.set(0, 10, 28);
+
+      const root = new THREE.Group();
+      scene.add(root);
+
+      const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+      scene.add(ambient);
+
+      const key = new THREE.DirectionalLight(0xff3b3b, 1.7);
+      key.position.set(-10, 18, 12);
+      scene.add(key);
+
+      const rim = new THREE.PointLight(0xff2d2d, 2.8, 120, 2);
+      rim.position.set(0, 8, 14);
+      scene.add(rim);
+
+      const fog = new THREE.FogExp2(0x050508, 0.03);
+      scene.fog = fog;
+
+      // Dragon body
+      const dragon = new THREE.Group();
+      root.add(dragon);
+
+      const matBody = new THREE.MeshStandardMaterial({
+        color: 0x2b0f12,
+        roughness: 0.65,
+        metalness: 0.12,
+        emissive: 0x140406,
+        emissiveIntensity: 0.6
+      });
+
+      const matWing = new THREE.MeshStandardMaterial({
+        color: 0x22080b,
+        roughness: 0.8,
+        metalness: 0.08,
+        side: THREE.DoubleSide,
+        emissive: 0x0f0304,
+        emissiveIntensity: 0.5
+      });
+
+      const body = new THREE.Mesh(new THREE.SphereGeometry(2.25, 28, 20), matBody);
+      body.scale.set(1.55, 1.0, 1.0);
+      dragon.add(body);
+
+      const chest = new THREE.Mesh(new THREE.SphereGeometry(1.55, 22, 16), matBody);
+      chest.position.set(2.8, -0.2, 0);
+      chest.scale.set(1.35, 1.1, 1.0);
+      dragon.add(chest);
+
+      const head = new THREE.Mesh(new THREE.SphereGeometry(1.25, 24, 18), matBody);
+      head.position.set(-3.0, 0.5, 0.0);
+      head.scale.set(1.2, .95, 1.0);
+      dragon.add(head);
+
+      const snout = new THREE.Mesh(new THREE.ConeGeometry(0.58, 1.8, 18), matBody);
+      snout.rotation.z = Math.PI / 2;
+      snout.position.set(-4.05, 0.45, 0);
+      dragon.add(snout);
+
+      const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.2, 2.8, 18), matBody);
+      neck.rotation.z = Math.PI / 2.7;
+      neck.position.set(-1.8, 0.5, 0);
+      dragon.add(neck);
+
+      const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.12, 8.5, 16), matBody);
+      tail.position.set(6.0, 0.1, 0);
+      tail.rotation.z = -Math.PI/2.7;
+      dragon.add(tail);
+
+      function makeWing(side=1){
+        const wing = new THREE.Group();
+        wing.position.set(0.2, 1.2, side * 2.0);
+
+        const base = new THREE.Mesh(new THREE.BoxGeometry(0.7, 3.8, 0.35), matBody);
+        base.rotation.z = -0.28;
+        base.position.set(0, 0, 0);
+        wing.add(base);
+
+        const membrane = new THREE.Mesh(new THREE.PlaneGeometry(7.4, 4.4, 10, 8), matWing);
+        membrane.position.set(3.2, 0.1, 0);
+        membrane.rotation.z = side * 0.02;
+        membrane.scale.y = 0.88;
+        wing.add(membrane);
+
+        const wingTip = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 8), matBody);
+        wingTip.position.set(6.2, 0.35, 0);
+        wing.add(wingTip);
+
+        wing.rotation.y = side * 0.2;
+        wing.rotation.z = side * 0.1;
+        return wing;
+      }
+
+      const wingL = makeWing(1);
+      const wingR = makeWing(-1);
+      dragon.add(wingL, wingR);
+
+      const leg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.34, 2.0, 12), matBody);
+      leg1.position.set(0.2, -1.8, 0.9);
+      leg1.rotation.z = 0.18;
+      dragon.add(leg1);
+
+      const leg2 = leg1.clone();
+      leg2.position.z = -0.9;
+      dragon.add(leg2);
+
+      const eyeMat = new THREE.MeshStandardMaterial({ color: 0xff1010, emissive: 0xff0000, emissiveIntensity: 2.5 });
+      const eye1 = new THREE.Mesh(new THREE.SphereGeometry(0.10, 10, 8), eyeMat);
+      eye1.position.set(-3.55, 0.75, 0.34);
+      const eye2 = eye1.clone();
+      eye2.position.z = -0.34;
+      dragon.add(eye1, eye2);
+
+      // Horns
+      const hornGeo = new THREE.ConeGeometry(0.18, 1.0, 8);
+      const horn1 = new THREE.Mesh(hornGeo, matBody);
+      horn1.position.set(-3.1, 1.45, 0.55);
+      horn1.rotation.z = -0.7;
+      const horn2 = horn1.clone();
+      horn2.position.z = -0.55;
+      dragon.add(horn1, horn2);
+
+      // Particle system
+      const pCount = 900;
+      const pGeo = new THREE.BufferGeometry();
+      const pos = new Float32Array(pCount * 3);
+      const vel = new Float32Array(pCount);
+      for(let i=0;i<pCount;i++){
+        pos[i*3+0] = (Math.random()-0.5) * 120;
+        pos[i*3+1] = (Math.random()-0.5) * 70;
+        pos[i*3+2] = (Math.random()-0.5) * 120;
+        vel[i] = 0.02 + Math.random() * 0.05;
+      }
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const pMat = new THREE.PointsMaterial({
+        color: 0xff4d6d,
+        size: 0.12,
+        transparent: true,
+        opacity: 0.78,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      });
+      const particles = new THREE.Points(pGeo, pMat);
+      scene.add(particles);
+
+      // Mist rings
+      const mistGroup = new THREE.Group();
+      scene.add(mistGroup);
+      for(let i=0;i<10;i++){
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(8 + i*2.2, 0.06 + i*0.008, 8, 80),
+          new THREE.MeshBasicMaterial({ color: 0xff2d2d, transparent:true, opacity: 0.035 })
+        );
+        ring.rotation.x = Math.PI / 2;
+        ring.position.y = -7 + i * 1.15;
+        mistGroup.add(ring);
+      }
+
+      let t = 0;
+      function animate(){
+        t += 0.01;
+
+        dragon.position.y = Math.sin(t * 1.5) * 0.9;
+        dragon.rotation.y = Math.sin(t * 0.33) * 0.28 - 0.15;
+        dragon.rotation.x = Math.sin(t * 0.22) * 0.08;
+        dragon.position.x = Math.sin(t * 0.45) * 2.2;
+        dragon.position.z = Math.cos(t * 0.3) * 1.4;
+
+        wingL.rotation.x = Math.sin(t * 8.5) * 0.55 + 0.45;
+        wingR.rotation.x = -Math.sin(t * 8.5) * 0.55 - 0.45;
+
+        tail.rotation.y = Math.sin(t * 2.2) * 0.18;
+        tail.rotation.z = -Math.PI/2.7 + Math.sin(t * 1.4) * 0.08;
+
+        particles.rotation.y = t * 0.05;
+        particles.rotation.x = Math.sin(t * 0.07) * 0.08;
+
+        const arr = pGeo.attributes.position.array;
+        for(let i=0;i<pCount;i++){
+          arr[i*3+1] += vel[i] * 0.025;
+          arr[i*3+0] += Math.sin(t * 0.5 + i) * 0.002;
+          arr[i*3+2] += Math.cos(t * 0
